@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusStore | Secure E-Commerce Engine & Checkout Sandbox</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="brand">
+        <span class="brand-icon">🛍️</span>
+        <span class="brand-name">Nexus<span>Store</span></span>
+      </a>
+
+      <div class="nav-actions">
+        <div id="authNavContainer">
+          <button class="btn btn-outline" id="btnOpenAuth">Sign In / Register</button>
+        </div>
+        <button class="cart-btn" id="btnOpenCart" aria-label="View Shopping Cart">
+          <span>🛒</span>
+          <span class="cart-badge" id="cartCount">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="hero-banner">
+    <div class="container">
+      <div class="badge">Progree Task 4 • Mini Project</div>
+      <h1>Secure E-Commerce Engine & Sandbox Pipeline</h1>
+      <p>JWT Authentication, Persistent Shopping Cart State, and Simulated Stripe Sandbox Checkout with Backend Inventory Deductions.</p>
+    </div>
+  </section>
+
+  <!-- Main Storefront Catalog -->
+  <main class="container store-container">
+    <div class="section-title-bar">
+      <h2>Featured Tech Hardware</h2>
+      <span class="inventory-status" id="inventoryStatus">Live Inventory Connected</span>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="product-grid" id="productGrid">
+      <div class="loading-state">Loading product catalog...</div>
+    </div>
+  </main>
+
+  <!-- Cart Drawer -->
+  <div class="cart-drawer-overlay" id="cartDrawerOverlay">
+    <aside class="cart-drawer" id="cartDrawer">
+      <div class="drawer-header">
+        <h3>Shopping Cart</h3>
+        <button class="drawer-close" id="btnCloseCart">&times;</button>
+      </div>
+      <div class="drawer-body" id="cartItemsList">
+        <!-- Rendered items -->
+      </div>
+      <div class="drawer-footer">
+        <div class="cart-total-row">
+          <span>Subtotal:</span>
+          <span class="cart-subtotal" id="cartSubtotal">$0.00</span>
+        </div>
+        <button class="btn btn-primary btn-checkout" id="btnProceedCheckout">
+          Proceed to Checkout 🔒
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Auth Modal (Login / Register) -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="authModalTitle">Sign In</h3>
+        <button class="modal-close" id="btnCloseAuth">&times;</button>
+      </div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Login</button>
+        <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Create Account</button>
+      </div>
+      <form id="authForm" class="auth-form">
+        <div class="form-group" id="groupName" style="display: none;">
+          <label for="authName">Full Name</label>
+          <input type="text" id="authName" placeholder="Mohsin Ali Shah">
+        </div>
+        <div class="form-group">
+          <label for="authEmail">Email Address</label>
+          <input type="email" id="authEmail" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label for="authPassword">Password</label>
+          <input type="password" id="authPassword" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary" id="btnAuthSubmit" style="width: 100%;">
+          Sign In
+        </button>
+        <p class="auth-error" id="authError"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Checkout Sandbox Modal -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal-card modal-checkout">
+      <div class="modal-header">
+        <h3>Secure Checkout Sandbox</h3>
+        <button class="modal-close" id="btnCloseCheckout">&times;</button>
+      </div>
+      <div class="sandbox-banner">
+        🧪 <strong>Stripe Sandbox Test Environment:</strong> Real payment credentials are not required. Use test mock cards to verify end-to-end stock decrement.
+      </div>
+      <div class="checkout-summary">
+        <h4>Order Summary</h4>
+        <div id="checkoutItemsList" class="checkout-items-list"></div>
+        <div class="checkout-total-row">
+          <strong>Total to Pay:</strong>
+          <strong id="checkoutTotalAmount">$0.00</strong>
+        </div>
+      </div>
+      <form id="paymentForm" class="payment-form">
+        <div class="form-group">
+          <label>Cardholder Name</label>
+          <input type="text" id="cardName" value="Mohsin Ali Shah" required>
+        </div>
+        <div class="form-group">
+          <label>Card Number (Sandbox Mock)</label>
+          <input type="text" id="cardNumber" value="4242 •••• •••• 4242" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Expires</label>
+            <input type="text" id="cardExpiry" value="12/28" required>
+          </div>
+          <div class="form-group">
+            <label>CVC</label>
+            <input type="text" id="cardCvc" value="888" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success" id="btnAuthorizePayment" style="width: 100%;">
+          Authorize & Pay Sandbox Transaction
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Success Confirmation Modal -->
+  <div class="modal-overlay" id="successModal">
+    <div class="modal-card">
+      <div class="success-icon">✅</div>
+      <h3>Payment Successful!</h3>
+      <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 0.5rem;">
+        Your order has been verified and inventory levels updated in the database.
+      </p>
+      <div class="receipt-box" id="receiptBox"></div>
+      <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" onclick="closeSuccessModal()">
+        Continue Shopping
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
